@@ -12,21 +12,12 @@ cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)  # Largura
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)  # Altura
 
 
-def desenha_retangulo_verde(frame):
-    """Desenha o retângulo verde que cobre a área especificada."""
-    # Define a cor do retângulo verde
-    cor_verde = (40, 255, 65)  # #28FF41
+def desenha_retangulo(frame, cor, alpha):
+    """Desenha o retângulo na cor e opacidade especificadas."""
     overlay = frame.copy()
-
-    # Desenha o retângulo verde
-    # Retângulo verde com opacidade
-    cv2.rectangle(overlay, (213, 80), (426, 240), cor_verde, -1)
-
-    # Adiciona o retângulo verde com opacidade
-    alpha = 0.2  # Opacidade do retângulo verde
+    cv2.rectangle(overlay, (213, 80), (426, 240), cor, -1)
     cv2.addWeighted(overlay, alpha, frame, 1 - alpha,
                     0, frame)  # Combina as imagens
-
     return frame
 
 
@@ -59,8 +50,15 @@ while cap.isOpened():
         frame = desenha_circulo(frame, cabeca_x, cabeca_y,
                                 raio=raio_cabeca, cor=(255, 255, 255))
 
-    # Desenha o retângulo verde na imagem
-    frame = desenha_retangulo_verde(frame)
+        # Verifica se o círculo saiu do retângulo verde
+        if (cabeca_x - raio_cabeca < 213 or cabeca_x + raio_cabeca > 426 or
+                cabeca_y - raio_cabeca < 80 or cabeca_y + raio_cabeca > 240):
+            cor_retangulo = (0, 0, 255)  # Vermelho
+        else:
+            cor_retangulo = (40, 255, 65)  # Verde
+
+        # Desenha o retângulo com a cor apropriada
+        frame = desenha_retangulo(frame, cor_retangulo, alpha=0.2)
 
     # Exibe o frame com o enquadramento
     cv2.imshow('Enquadramento Automático - BodyTrack', frame)
