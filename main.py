@@ -46,7 +46,7 @@ while cap.isOpened():
         cabeca_y = int(landmarks[mp_pose.PoseLandmark.NOSE].y * height)
 
         # Aumenta o raio para cobrir a cabeça inteira
-        raio_cabeca = int(0.1 * height)
+        raio_cabeca = int(0.12 * height)
         frame = desenha_circulo(frame, cabeca_x, cabeca_y,
                                 raio=raio_cabeca, cor=(255, 255, 255))
 
